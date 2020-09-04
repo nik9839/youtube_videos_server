@@ -14,3 +14,4 @@ class Videos(models.Model):
 class YoutubeKeys(models.Model):
     key = models.CharField(_("api key"), max_length=50)
     added_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    quote_reached = models.BooleanField(_("api quota reached"), default=False)
