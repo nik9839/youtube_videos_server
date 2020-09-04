@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 from os import getenv
+from celery.schedules import crontab
+from datetime import timedelta
 
 from pathlib import Path
 
@@ -115,6 +117,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+CELERY_BROKER_URL = 'redis://localhost:6379'   
+CELERY_TIMEZONE = 'UTC'
+
+CELERY_BEAT_SCHEDULE = {
+    'fetch-data-from-youtube': {
+       'task': 'get_youtube_data',
+       'schedule': timedelta(seconds=10)
+    },
+}
+
 
 
 # Internationalization
