@@ -5,12 +5,14 @@ from rest_framework.response import Response
 
 from videos.models import Videos , YoutubeKeys
 from videos.serializers import VideoListSerializer, AddKeySerializer
-
+from videos.filters import SearchBackend
 
 class VideosViewSet(viewsets.ReadOnlyModelViewSet):
 
     model = Videos
     serializer_class = VideoListSerializer
+
+    filter_backends = (SearchBackend,)
 
     def get_queryset(self):
         """
