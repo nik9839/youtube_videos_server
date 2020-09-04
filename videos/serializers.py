@@ -44,3 +44,9 @@ class VideoListSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             return _convert_datetime_to_local_timezone(request, obj.published_at)
         return None
+
+
+
+class AddKeySerializer(serializers.Serializer):
+
+    apikey = serializers.CharField(required=True)
