@@ -20,7 +20,7 @@ class VideosViewSet(viewsets.ReadOnlyModelViewSet):
             RETURN Videos queryset
         """
 
-        queryset = self.model.objects.order_by("id") 
+        queryset = self.model.objects.order_by("published_at") 
         
         return queryset
 
