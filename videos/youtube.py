@@ -16,13 +16,12 @@ def get_api_key():
 
 def set_key_expiry_status(id):
     youtube_api_key = YoutubeKeys.objects.get(id=id)
-    youtube_api_key.quote_reached
+    youtube_api_key.quote_reached = True
     youtube_api_key.save()
 
 
 def add_videos_in_db(videos_list):
     for item in videos_list:
-        print(item)
         title =  item.get("snippet", {}).get("title", "")
         description = item.get("snippet", {}).get("description", "")
         publishedAt = item.get("snippet", {}).get("publishedAt", datetime.now())
@@ -34,23 +33,25 @@ def add_videos_in_db(videos_list):
 def fetch_videos_with_api(base_url, apiKey, nextPageToken=None):
     try:
         if nextPageToken:
-            base_url = base_url + "&nextPageToken=" + nextPageToken
-        
+            base_url = base_url + "&nextPageToken=" + nextPageToken      
         base_url = base_url + "&key="+apiKey.key
         try:
             response = requests.request("GET", base_url)
             data = json.loads(response.text)
-            items = data.get("items", [])
-            add_videos_in_db(items)
-            nextPageToken = data.get("nextPageToken", None)
-            if nextPageToken and len(items) > 0:
-                fetch_videos_with_api(base_url, apiKey, nextPageToken)
+            if data.get("error"):
+                set_key_expiry_status(apiKey.id)
+                new_api_key = get_api_key()
+                if new_api_key:
+                    fetch_videos_with_api(base_url, new_api_key, nextPageToken)
+            else:
+                items = data.get("items", [])
+                add_videos_in_db(items)
+                nextPageToken = data.get("nextPageToken", None)
+                if nextPageToken and len(items) > 0:
+                    fetch_videos_with_api(base_url, apiKey, nextPageToken)
         except Exception as e:
             print(e)
-            set_key_expiry_status(apiKey.id)
-            new_api_key = get_api_key()
-            if new_api_key:
-                fetch_videos_with_api(base_url, new_api_key, nextPageToken)
+            
     except Exception as e:
         print(e)
 
