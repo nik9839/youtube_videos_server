@@ -30,6 +30,7 @@ class VideoListSerializer(serializers.ModelSerializer):
     title = serializers.ReadOnlyField()
     description = serializers.ReadOnlyField()
     published_at = serializers.SerializerMethodField()
+    thumnails = serializers.ReadOnlyField()
 
 
     class Meta:
