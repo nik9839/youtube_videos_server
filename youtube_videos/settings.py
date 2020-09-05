@@ -124,7 +124,8 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_BEAT_SCHEDULE = {
     'fetch-data-from-youtube': {
        'task': 'get_youtube_data',
-       'schedule': timedelta(seconds=10)
+       'schedule': timedelta(seconds=10),
+       'args' : [10]
     },
 }
 
