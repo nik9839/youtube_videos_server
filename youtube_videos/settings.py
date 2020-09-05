@@ -91,13 +91,14 @@ WSGI_APPLICATION = 'youtube_videos.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_setting('DATABASE_NAME'),
-        'USER': get_env_setting('DATABASE_USER'),
-        'PASSWORD': get_env_setting('DATABASE_PASSWORD'),
-        'HOST': get_env_setting('DATABASE_HOST'),
+        'NAME': getenv('DATABASE_NAME', ""),
+        'USER': getenv('DATABASE_USER', ""),
+        'PASSWORD': getenv('DATABASE_PASSWORD', ""),
+        'HOST': getenv('DATABASE_HOST', ""),
         'PORT': getenv('DATABASE_PORT', 5432),
     }
 }
+
 
 
 # Password validation
@@ -118,14 +119,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CELERY_BROKER_URL = 'redis://localhost:6379'   
+REDIS_HOST = getenv("REDIS_HOST", "localhost")
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST +':6379'   
 CELERY_TIMEZONE = 'UTC'
+
+GET_DATA_AFTER_EVERY_X_SECONDS  = getenv("GET_DATA_AFTER_EVERY_X_SECONDS", 1000)
 
 CELERY_BEAT_SCHEDULE = {
     'fetch-data-from-youtube': {
        'task': 'get_youtube_data',
-       'schedule': timedelta(seconds=10),
-       'args' : [10]
+       'schedule': timedelta(seconds=int(GET_DATA_AFTER_EVERY_X_SECONDS)),
+       'args' : [int(GET_DATA_AFTER_EVERY_X_SECONDS)]
     },
 }
 
@@ -150,5 +154,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-YOUTUBE_API_VIDEOS_TYPE = "cricket"
-YOUTUBE_API_MAX_RESULT = 50
+YOUTUBE_API_VIDEOS_TYPE = getenv("YOUTUBE_API_VIDEOS_TYPE", "cricket")
+YOUTUBE_API_MAX_RESULT = getenv("YOUTUBE_API_MAX_RESULT", 50)
