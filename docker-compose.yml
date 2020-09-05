@@ -1,0 +1,45 @@
+version: '3'   
+
+services:
+    db:
+      image: postgres
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    redis:
+      restart: always
+      image: redis:latest
+      expose:
+        - "6379"
+    web:
+      build: .
+      environment:
+        - DATABASE_NAME=postgres
+        - DATABASE_USER=postgres
+        - DATABASE_HOST=db
+        - DATABASE_PASSWORD=postgres
+        - REDIS_HOST=redis
+        - GET_DATA_AFTER_EVERY_X_SECONDS=100
+      command: python manage.py runserver 0.0.0.0:8000
+      volumes:
+        - .:/code
+      ports:
+        - "8000:8000"
+      depends_on:
+        - db
+        - redis
+    worker:
+      build: .
+      environment:
+        - DATABASE_NAME=postgres
+        - DATABASE_USER=postgres
+        - DATABASE_HOST=db
+        - DATABASE_PASSWORD=postgres
+        - REDIS_HOST=redis
+        - GET_DATA_AFTER_EVERY_X_SECONDS=100
+      command: celery -A youtube_videos worker -B -l INFO
+      volumes:
+        - .:/code
+      depends_on:
+        - db
