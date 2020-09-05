@@ -149,3 +149,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+YOUTUBE_API_VIDEOS_TYPE = "cricket"
+YOUTUBE_API_MAX_RESULT = 50
