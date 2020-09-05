@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 from videos.models import Videos , YoutubeKeys
 from videos.serializers import VideoListSerializer, AddKeySerializer
@@ -11,7 +12,7 @@ class VideosViewSet(viewsets.ReadOnlyModelViewSet):
 
     model = Videos
     serializer_class = VideoListSerializer
-
+    pagination_class = LimitOffsetPagination
     filter_backends = (SearchBackend,)
 
     def get_queryset(self):
