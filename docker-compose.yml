@@ -20,7 +20,8 @@ services:
         - DATABASE_HOST=db
         - DATABASE_PASSWORD=postgres
         - REDIS_HOST=redis
-        - GET_DATA_AFTER_EVERY_X_SECONDS=100
+        - GET_DATA_AFTER_EVERY_X_SECONDS=1000
+        - YOUTUBE_API_VIDEOS_TYPE=basketball,cricket,news
       command: python manage.py runserver 0.0.0.0:8000
       volumes:
         - .:/code
@@ -37,7 +38,8 @@ services:
         - DATABASE_HOST=db
         - DATABASE_PASSWORD=postgres
         - REDIS_HOST=redis
-        - GET_DATA_AFTER_EVERY_X_SECONDS=100
+        - GET_DATA_AFTER_EVERY_X_SECONDS=1000
+        - YOUTUBE_API_VIDEOS_TYPE=basketball,cricket,news
       command: celery -A youtube_videos worker -B -l INFO
       volumes:
         - .:/code
